@@ -1,0 +1,40 @@
+# DevOps SetUP
+
+## 
+
+
+
+
+
+
+
+
+
+
+
+## Setup on QA server
+
+### Install tomcat:
+$ sudo apt-get install -y tomcat9 tomcat9-admin
+
+### Open a file :
+$ sudo vim /etc/tomcat9/tomcat-users.xml
+
+Create a user by scrolling to the bottom of the file. Just before </tomcat-user> and directly below the comment :
+
+<user username="nottie" password="nottie" roles="manager"/>
+
+save and quit
+
+Restart server:
+$ sudo service tomcat9 restart
+
+Check if tomcat is installed
+
+$ sudo systemctl status tomcat9
+
+
+## ProdServer setup
+Co
+
+
