@@ -35,6 +35,16 @@ $ sudo systemctl status tomcat9
 
 
 ## ProdServer setup
-Co
+Connect to prodserver and setup as above
+
+## Setting up build triggers
+
+Configuration ---> Build triggers ----> Poll SCM --->Schedule
+
+Assign a schedule for a cron job e.g :
+
+* * * * *     : means Jenkins should check with github every minute to check if there has been a change with the source and make a build.
+
+00 10 * 9 *   : everyday at 10:00am 
 
 
