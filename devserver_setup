@@ -33,6 +33,31 @@ Check if tomcat is installed
 
 $ sudo systemctl status tomcat9
 
+# DevOps activities
+- Connect to your Jenkins server
+ ** Ensure port 8080 is open on the AWS security settings ** 
+- Install Jenkins from a war package and jenkins gets started
+- Start the Jenkins server and go on the UI 
+- Start new project from the 'New Item' icon
+- Add a description of the project 
+- Add a plugin to deploy the project by install 'Deploy to container' plugin
+(this plugin helps deploying the project from Jenkins to QA environment)
+- During process of deployment plugin is expecting a glob parten **/*
+- With the path provided an artefact is deployed into QA environment
+(ensure to choose private IP address not public IP during the deployment at the plugin level)
+-To access the applications use the public IP of QA server: port 8080 and the context path name
+(context path used during configuration)
+- After accessing the application QA proposes changes on the application 
+- To put those changes into effect the app has to be rebuilt
+- The build process is automated by going to the configuration page and selecting 'Build triggers' __> SCM
+- With Poll SCM, builds happen when there is a change on the source code on github
+-If no change has happened and bothe projects are similar, i.e github and jenkins, nothing happens
+- Based on the cron job, Jenkins keeps track of an commit changes
+- If ANY change happens on the source code even if its a spelling change, Jenkins makes not of that change and makes a sofware build
+- If you want sourec code to be build periodically regardless of changes on github or not you select the " Build periodically " icon Build triggers
+(nomatter any change or not the project will be build and you will find after an hour 66 builds)
+- Take not of difference between on Poll SCM ( only triggers build if there a source code change at the schedule time )and 
+the Build periodically (triggers a build regardless whether there is a commit or not at the scheduled time) 
 
 ## ProdServer setup
 Connect to prodserver and setup as above
