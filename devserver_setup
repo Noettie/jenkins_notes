@@ -26,6 +26,42 @@ $ sudo apt-get update
 $ sudo apt-get install fontconfig openjdk-11-jre
 $ sudo apt-get install jenkins
  
+ > When Jenkins is installed check status :
+ 
+$ sudo systemctl status jenkins
+
+> Status should be active
+> Connect to server by using PupblicIP:8080
+** Password is required. Run command
+
+$ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+> use password to Unlock password
+> Continue and install suggested password
+> Generate ssh keys:
+$ ssh-keygen
+enter   ( password already encrypted so there is no need for added layer of security so continue without password)
+enter
+enter
+
+$ ssh-copy-id ubuntu@<private_ip_qaserver>  
+$ ssh-copy-id ubuntu@<private_ip_prodserver>  
+* this copy the keys saved in .ssh/id_rsa.pub into the qa and prod servers
+(dedicated command to copy the keys into qa and prod environemnt)
+(these hold authentication for the jenkins server and we save)
+
+ ## these steps allows passwordless authentication
+ - To check keys saved
+ 
+ $ cd .ssh
+ $ ls
+ $ cat id_rsa.pub
+ 
+ ** the same keys will be on the prod server and qa server
+ 
+ So prod and qa servers do a comparise when recieving request from jenkins server if they have authorised keys of the server requesting connection (jenkins server)
+ - Matching keys will be found and connection allowed
+
 ## Setup on QA server
 
 ### Install tomcat:
