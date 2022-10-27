@@ -1,17 +1,31 @@
 # DevOps SetUP
 
 ## 
+Installing Jenkins
 
-
-
-
-
-
-
-
-
-
-
+> Create EC2 instance which will be the jenkins server
+> In advanced networking open port 8080 for Jenkins
+> In userdata add bash script to install java
+!/bin/bash
+sudo apt update
+sudo apt-get -y jdk
+ > When instance is started (server running) check if java install
+ 
+$ java  -version
+ 
+ > Run commands to install jenkins
+ 
+$ curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+$ /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+    
+$ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+    
+$ sudo apt-get update
+$ sudo apt-get install fontconfig openjdk-11-jre
+$ sudo apt-get install jenkins
+ 
 ## Setup on QA server
 
 ### Install tomcat:
@@ -59,6 +73,39 @@ $ sudo systemctl status tomcat9
 - Take not of difference between on Poll SCM ( only triggers build if there a source code change at the schedule time )and 
 the Build periodically (triggers a build regardless whether there is a commit or not at the scheduled time) 
 
+## When qa testing is approved go to Build tests---> Execute shell and type : echo " Testing Passed" 
+
+To make another project a downstream project to exrtend the functionality of the main project:
+
+** It ensures that immediately after project one steps are executed, project 2 steps are executed **
+
+Post build Actions ---> Build other projects ----> "enter name of new project to sync" ---> Add post build action ---> "select archive artifect" ---
+
+---> Archive the artifect---> Files to archive ---> input " **/*.war 
+
+( this means whatever artifacts (files)  are in this path on main project, archive/compress those files) 
+
+## Aftr linking the project AWLAYS ensure to build the MAIN PROJECT not the second one 
+
+Once testing is completed project has to be released to production environment 
+- For project 2 to be realsed to production there should be an artifact in the project workspace
+- Copy the artifect in project 1 to project 2 :
+
+Project2 ----> Configuration -----> Build steps ---> Add build step ----> Copy artifect to project 
+
+NB : is that option is not available go to the Manage Jenkins and add plugins availavle " Copy artefact"
+ - This will automatically copy the artifect once main project is built
+ 
+ -Build main project and check if devops.war artefact is available
+ 
+ - Artefact should be available and ready to be released to prod environment :
+ 
+ Configuration ---> Post build actions ---> Add post build actions ---> "Deploy war/ear to a container ---> War/ear file : " **/*.war ---
+ ---> context path " release 10"  ---> container ---> Add container " Tomacat9 --> Credentials ---> add your tomcat credentials --
+ ---> Tomacat URL " http://<privateIP_prod_server> " eg  http://172.31.80.90:8080
+ 
+ - save 
+
 ## ProdServer setup
 Connect to prodserver and setup as above
 
@@ -73,3 +120,85 @@ Assign a schedule for a cron job e.g :
 00 10 * 9 *   : everyday at 10:00am 
 
 
+## Deploy war/ear container can only be done once
+
+To release project for testing we have to sinc it with another project 
+
+## Creating Jenkins users
+
+- First admin has permision to create users
+- By default users have permission to do anything  (logged in users can do anything)
+- To prevent this install ' Role based stragtegy' plugin
+- With this strategy all other created users will be denied access " taff is missing the Overall/Read permission"
+
+First admin must assign roles to users
+
+Manage Jenkins ---> Security---> Manage and Assign roles----> Manage roles
+
+i)    Manage roles  : Create Global role e.g "employee"
+ii)   Assign Roles  : Assign usernames 
+iii)  Item roles    : Assign roles based on specific projects
+
+## When JOB Read is selected then all users have access to All projects and will be able to see them on their dashboard
+
+** Remove Global 'Overall Admin and Job  Read' . This restricts only to item roles ie specific projects to users
+
+### Pipeline as Code
+
+## Scripted pipe
+
+* Always begins with a keyword "node"
+* Easy to write
+* If one script fails, projects halts (stops)
+
+## Structure
+
+ node(master/slave)
+ { 
+    stage( "ContDownload")
+    {
+    //Code in Groovy
+    }
+    stage("ContBuild")
+    {
+    //Groovy
+    }
+    .
+    .
+    .
+    . repeat and add more blocks for multiples stages
+    .
+    .
+    .
+    .
+ } ( close node after last stage)
+
+## Declarative pipeline as code
+
+* Always begins with keyword "pipe"
+* Structured and organized
+* But difficult to write
+* If one stage fails , tries to continue with other stages following
+
+## Structure
+
+pipeline
+{
+    agent any (master/slave)    if any jenkins will decide which node
+    stages
+    {
+          stage("ContDownload")
+          {
+              steps
+              {
+              //Code
+              }
+           }
+           .
+           .
+           .
+           .
+     }
+ }    
+          
+      
