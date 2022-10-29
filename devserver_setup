@@ -362,7 +362,27 @@ Jenkins build notifications
 -Can use third party tool called Catlight app for collaboration
 -Our team are connected with default Catlight notification to obtain notifications on jenkins,
 then later on I worked with manager so we can rely on customized jenkins email notifications so we dont get charged at all 
-* best practises t
+* best practises 
+
+Quick Jenkins server setup
+
+> Launch ec2 instance with user scriot to install java
+#!/bin/bash
+sudo apt-get update
+sudo apt-get install -y default-jdk
+
+> Connect to instance 
+> Check if java installed
+$ java -version
+> Install jenkins: Copy installation package from jenkins.io/downloads
+$ wget <jenkins_package>
+$ ls 
+jenkins.war
+> start jenkins :
+$ java -jar jenkins.war
+> Connect to jenkins server:
+<jenkinspv_ip:8080> (make sure port 8080 is open )
+>Copy and paste code on terminal for authentication on jenkins UI
 
  
  
