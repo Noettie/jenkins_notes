@@ -384,9 +384,43 @@ $ java -jar jenkins.war
 <jenkinspv_ip:8080> (make sure port 8080 is open )
 >Copy and paste code on terminal for authentication on jenkins UI
 
+** Jenkins ready for use.
+
+## Using Pytgon scrpits for Jenkins automation
+
+> Create worker instance 
+> Install Python
+> To automate jenkins using python, a modules called jenkins should be downloaded
+> To download this module you require some packages on the server where you want to perform the automation
+> Use pip package manager for any python installations
+
+$ sudo apt-get install -y python3-pip
+
+> Through pip install a package
+
+$ sudo pip install python-jenkins
+
+> Switch to root user
+> Can start writting python program to interact with jenkins
+
+$ vim program1.py
+
+## script to build a job on jenkins
+
+import jenkins
+server = jenkins.Jenkins('http://3.82.210.226:8080/', username='nottie', password='Iamfierce@21287')
+server.build_job("DevProject1")
+
+
+
+NB : For python scriptimng you can use am absolute path and a relative path to run a shell script but NOT POSSIBLE for python scripts.
+For python script you have to run the scripts 
+
+NB : Running python scripts be sure to run build jobs on projects that actually exists on dashbaod otherwise there will be an error
+
  
  
- 
+NB: Everytime when writting a loop, while i .., the lop should reach termination and the while condition should fail and the loop stops
  
  
  
